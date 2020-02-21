@@ -138,7 +138,7 @@ class LogCommand extends Command
 
             $connection->execute('
                 CREATE TABLE '.$this::tableName.' (
-                    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+                    id VARCHAR(128) PRIMARY KEY,
                     uniqueId VARCHAR(255) NOT NULL,
                     sessionId VARCHAR(255) NOT NULL,
                     title VARCHAR(255) NOT NULL,

@@ -28,6 +28,7 @@ class Log extends Entity
      * @var array
      */
     protected $_accessible = [
+        'id' => true,
         'uniqueId' => true,
         'sessionId' => true,
         'title' => true,

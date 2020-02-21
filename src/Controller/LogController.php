@@ -29,6 +29,16 @@ class LogController extends AppController
         $log = $this->Log->newEntity();
         $this->Log->patchEntity($log, $params);
 
+        if ($this->Log->find()->where(['id' => $log->id])->first() !== null) {
+
+            return $this->getResponse()
+                ->withStatus(409)
+                ->withStringBody(json_encode((object) [
+                    "id" => $log->id
+                ]));
+
+        }
+
         if (gettype($this->getRequest()->getData('logEventDate')) === 'integer') {
 
             $log->logEventDate = date_timestamp_set(new \DateTime, $params['logEventDate']);
@@ -47,7 +57,12 @@ class LogController extends AppController
 
         }
 
-        $this->Log->save($log);
+        if (!$this->Log->save($log)) {
+
+            return $this->getResponse()->withStatus(500);
+
+        }
+
 
         return $this->getResponse()->withStatus(201);
 
@@ -119,8 +134,36 @@ class LogController extends AppController
 
         }
 
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        $ids = [];
+        foreach ($rows as $row) {
+
+            $ids[] = $row['id'];
+
+        }
+
+        $exists = $this->Log->find()->where(['id IN' => $ids])->all()->toArray();
+
+        if (count($exists) > 0) {
+
+            $bad_ids = [];
+            foreach ($exists as $log) {
+
+                $bad_ids[] = $log->id;
+
+            }
+
+            return $this->getResponse()
+                ->withStatus(409)
+                ->withStringBody(json_encode((object) [
+                    "ids" => $bad_ids
+                ]));
+
+        }
+
+
         $log = [];
-        foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($rows as $row) {
 
             $log[] = $this->Log->newEntity($row);
 
