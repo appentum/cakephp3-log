@@ -2,7 +2,7 @@
     "name": "appentum/cakephp3-log",
     "description": "Log plugin for CakePHP 3",
     "type": "cakephp-plugin",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "license": "MIT",
     "require": {
         "cakephp/cakephp": "^3.5",

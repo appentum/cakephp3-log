@@ -42,8 +42,10 @@ class LogTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->allowEmptyString('id', null, 'create');
+            ->scalar('id')
+            ->maxLength('id', 128)
+            ->requirePresence('id', 'create')
+            ->notEmptyString('id');
 
         $validator
             ->scalar('uniqueId')
